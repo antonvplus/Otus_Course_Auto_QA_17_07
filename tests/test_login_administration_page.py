@@ -21,9 +21,9 @@ def test_availability_of_password(browser: WebDriver, base_url: str) -> None:
 def test_availability_of_log_in_button(browser: WebDriver, base_url: str) -> None:
     page = LoginAdministrationPage(browser, base_url,  LINK)
     page.open()
-    page.check_visibility_and_clickable_element('log_in_button')
+    page.check_clickable_element('log_in_button')
 
 def test_availability_of_forgot_password_button(browser: WebDriver, base_url: str) -> None:
     page = LoginAdministrationPage(browser, base_url,  LINK)
     page.open()
-    page.check_visibility_and_clickable_element('forgot_password_button')
+    page.check_clickable_element('forgot_password_button')

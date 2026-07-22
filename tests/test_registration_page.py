@@ -31,4 +31,4 @@ def test_availability_of_birthdate(browser: WebDriver, base_url: str) -> None:
 def test_availability_of_save_button(browser: WebDriver, base_url: str) -> None:
     page = RegistrationPage(browser, base_url,  LINK)
     page.open()
-    page.check_visibility_and_clickable_element('save_button')
+    page.check_clickable_element('save_button')

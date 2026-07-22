@@ -3,10 +3,12 @@ from selenium.webdriver.common.by import By
 class MainPageLocators:
     CONTACT_US = (By.ID, 'contact-link')
     CLOTHES = (By.ID, 'category-3')
-    PRODUCT_HUMMINGBIRD_PRINTED_SWEATER = (By.CSS_SELECTOR, '#content > section:nth-child(2) > div > div:nth-child(2) > article > div > div.thumbnail-top > a')
+    PRODUCT_HUMMINGBIRD_PRINTED_SWEATER = (By.CSS_SELECTOR,
+                                           '#content > section:nth-child(2) > div > div:nth-child(2) > article > div > div.thumbnail-top > a')
     ALL_PRODUCTS = (By.CSS_SELECTOR, '#content > section:nth-child(2) > a')
     SUBSCRIBE_BUTTON = (By.CSS_SELECTOR, 'input.btn.btn-primary.float-xs-right.hidden-xs-down')
-    PRICE_FIRST_PRODUCT = (By.CSS_SELECTOR, 'section:nth-child(2) > div > div:nth-child(1) > article > div > div.product-description > div.product-price-and-shipping > span.price')
+    PRICE_FIRST_PRODUCT = (By.CSS_SELECTOR,
+                           'section:nth-child(2) > div > div:nth-child(1) > article > div > div.product-description > div.product-price-and-shipping > span.price')
     PRICE_SECOND_PRODUCT = (By.CSS_SELECTOR,
                            'section:nth-child(2) > div > div:nth-child(2) > article > div > div.product-description > div.product-price-and-shipping > span.price')
     PRICE_THIRD_PRODUCT = (By.CSS_SELECTOR,
