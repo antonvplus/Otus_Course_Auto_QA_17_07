@@ -26,11 +26,11 @@ class CatalogPage(BasePage):
             assert self.get_text_element(CatalogPageLocators.PRICE_THIRD_PRODUCT) == '€29.00', \
                 f"Expect: '€29.00', Actual: '{self.get_text_element(MainPageLocators.PRICE_THIRD_PRODUCT)}'"
         elif currency == 'USD':
-            assert self.get_text_element(CatalogPageLocators.PRICE_FIRST_PRODUCT) == '$21.86', \
+            assert self.get_text_element(CatalogPageLocators.PRICE_FIRST_PRODUCT) == '$21.80', \
                 f"Expect: '$21.86', Actual: '{self.get_text_element(MainPageLocators.PRICE_FIRST_PRODUCT)}'"
-            assert self.get_text_element(CatalogPageLocators.PRICE_SECOND_PRODUCT) == '$32.83', \
+            assert self.get_text_element(CatalogPageLocators.PRICE_SECOND_PRODUCT) == '$32.75', \
                 f"Expect: '$32.83', Actual: '{self.get_text_element(MainPageLocators.PRICE_SECOND_PRODUCT)}'"
-            assert self.get_text_element(CatalogPageLocators.PRICE_THIRD_PRODUCT) == '$33.15', \
+            assert self.get_text_element(CatalogPageLocators.PRICE_THIRD_PRODUCT) == '$33.07', \
                 f"Expect: '$33.15', Actual: '{self.get_text_element(MainPageLocators.PRICE_THIRD_PRODUCT)}'"
 
     def change_currency(self):

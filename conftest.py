@@ -2,6 +2,7 @@ import pytest
 from selenium import webdriver
 from typing import Generator
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.chrome.options import Options
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome", help="Selecting browser (chrome, firefox)")
@@ -14,7 +15,9 @@ def base_url(request: pytest.FixtureRequest) -> str:
 @pytest.fixture(scope="function")
 def browser(request: pytest.FixtureRequest) -> Generator[WebDriver, None, None]:
     if request.config.getoption('browser') == 'chrome':
-        browser = webdriver.Chrome()
+        options = Options()
+        options.add_argument("--start-maximized")
+        browser = webdriver.Chrome(options=options)
     elif request.config.getoption('browser') == 'firefox':
         browser = webdriver.Firefox()
     else:

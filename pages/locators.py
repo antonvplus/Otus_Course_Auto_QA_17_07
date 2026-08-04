@@ -10,7 +10,7 @@ class MainPageLocators:
     PRICE_FIRST_PRODUCT = (By.CSS_SELECTOR,
                            'section:nth-child(2) > div > div:nth-child(1) > article > div > div.product-description > div.product-price-and-shipping > span.price')
     PRICE_SECOND_PRODUCT = (By.CSS_SELECTOR,
-                           'section:nth-child(2) > div > div:nth-child(2) > article > div > div.product-description > div.product-price-and-shipping > span.price')
+                           'div:nth-child(2) > article > div > div.product-description > div.product-price-and-shipping > span.price')
     PRICE_THIRD_PRODUCT = (By.CSS_SELECTOR,
                            'section:nth-child(2) > div > div:nth-child(3) > article > div > div.product-description > div.product-price-and-shipping > span.price')
     CURRENCY = (By.CSS_SELECTOR, '#_desktop_currency_selector > div > button')
@@ -52,6 +52,9 @@ class RegistrationPageLocators:
     PASSWORD = (By.ID, 'field-password')
     BIRTHDATE = (By.ID, 'field-birthday')
     SAVE_BUTTON = (By.CSS_SELECTOR, 'footer > button')
+    CHECK_BUTTON_I_AGREE = (By.CSS_SELECTOR, 'input[name="psgdpr"]')
+    CHECK_BUTTON_CUSTOMER_DATA_PRIVACY = (By.CSS_SELECTOR, 'input[name="customer_privacy"]')
+    USER = (By.CSS_SELECTOR, "#_desktop_user_info > div > a.account > span")
 
 class AdminPanelPageLocators:
     DEMO_MODE = (By.ID, 'page-header-desc-configuration-switch_demo')
@@ -60,6 +63,29 @@ class AdminPanelPageLocators:
     PRODUCTS_AND_SALES = (By.ID, 'dashproducts')
     USER_BUTTON = (By.ID, 'header_employee_box')
     SIGN_OUT_BUTTON = (By.ID, 'header_logout')
+    LIST_CATALOG = (By.ID, "subtab-AdminCatalog")
+    LIST_PRODUCTS = (By.ID, "subtab-AdminProducts")
+    SIDEBAR = (By.CSS_SELECTOR, "#header_infos > i")
+
+class AdminCatalogProductsPageLocators:
+    NEW_PRODUCT_BUTTON = (By.ID, "page-header-desc-configuration-add")
+    ADD_NEW_PRODUCT_BUTTON = (By.ID, "create_product_create")
+    SUMMARY_FIELD = (By.ID, "mceu_20")
+    DESCRIPTION_FIELD = (By.ID, "mceu_41")
+    DETAILS_TAB = (By.CSS_SELECTOR, "#product_details-tab-nav > a")
+    REFERENCE_FIELD = (By.ID, "product_details_references_reference")
+    PRICING_TAB = (By.CSS_SELECTOR, "#product_pricing-tab-nav > a")
+    RETAIL_PRICE_FIELD = (By.ID, "product_pricing_retail_price_price_tax_excluded")
+    COST_PRICE_FIELD = (By.ID, "product_pricing_wholesale_price")
+    SAVE_BUTTON = (By.ID, "product_footer_save")
+    GO_TO_CATALOG_BUTTON = (By.ID, "product_footer_actions_catalog")
+    CLOSE_BUTTON = (By.CSS_SELECTOR, '[title="Close Toolbar"]')
+    TEST = (By.CSS_SELECTOR, '#create_product > div.product-type-selector.form-group > div.product-type-choices > button.product-type-choice.btn.btn-primary')
+    DROP_DOWN_LIST = (By.CSS_SELECTOR, 'a.btn.btn-link.dropdown-toggle.dropdown-toggle-dots.dropdown-toggle-split.no-rotate')
+    DELETE_BUTTON = (By.CSS_SELECTOR, 'a.btn.tooltip-link.js-submit-row-action.dropdown-item.grid-delete-row-link')
+    DELETE_2_BUTTON = (By.CSS_SELECTOR, 'button.btn.btn-danger.btn-lg.btn-confirm-submit')
+
+
 
 class CartPageLocators:
     PRODUCT = (By.CLASS_NAME, 'product-line-grid')

@@ -2,6 +2,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.keys import Keys
 
 class BasePage:
     def __init__(self, browser: WebDriver, base_url: str, url: str):
@@ -41,9 +42,32 @@ class BasePage:
                 f"after {timeout} seconds on page {self.browser.current_url}"
             )
 
+    def fill_in_text_field_which_are_introduced_from_end(self, locator: tuple[str, str], text: str, timeout: int = 5) -> None:
+        try:
+            WebDriverWait(self.browser, timeout).until(EC.visibility_of_element_located(locator))
+            element = self.browser.find_element(*locator)
+            element.send_keys(Keys.CONTROL + "a")
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(text)
+        except TimeoutException:
+            raise AssertionError(
+                f"Element with locator {locator} was not found "
+                f"after {timeout} seconds on page {self.browser.current_url}"
+            )
+
     def click_on_element(self, locator: tuple[str, str], timeout: int = 5) -> None:
         try:
             WebDriverWait(self.browser, timeout).until(EC.element_to_be_clickable(locator)).click()
+        except TimeoutException:
+            raise AssertionError(
+                f"Element with locator {locator} was not found "
+                f"after {timeout} seconds on page {self.browser.current_url}"
+            )
+
+    def click_on_checkbox(self, locator: tuple[str, str], timeout: int = 5) -> None:
+        try:
+            element = self.browser.find_element(*locator)
+            self.browser.execute_script("arguments[0].click();",element)
         except TimeoutException:
             raise AssertionError(
                 f"Element with locator {locator} was not found "
