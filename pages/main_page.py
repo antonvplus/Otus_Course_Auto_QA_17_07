@@ -1,4 +1,6 @@
 from pages.base_page import BasePage
+import allure
+import logging
 from typing import TYPE_CHECKING
 from selenium.webdriver.common.by import By
 
@@ -27,31 +29,48 @@ class MainPage(BasePage):
                              'all_products': ALL_PRODUCTS,
                              'subscribe': SUBSCRIBE_BUTTON}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.logger = logging.getLogger("Logger.MainPage")
+
+    def open(self) -> None:
+        self.logger.info(f"Открыт браузер: {self.url}")
+        super().open()
 
     def check_clickable_element(self, element: str) -> None:
+        self.logger.info(f"Проверка, что элемент {element} кликабельный")
         assert self.is_element_clickable(self.dict_elements_on_page[element]), f"Non-clickable element '{element}' on the page."
 
     def click_on_product(self, product_page: ProductPage) -> ProductPage:
+        self.logger.info("Нажимаем на товар")
         self.click_on_element(self.PRODUCT_HUMMINGBIRD_PRINTED_SWEATER)
-        return product_page
+        with allure.step("Переходим на страницу товара"):
+            self.logger.info("Переход на страницу ProductPage")
+            return product_page
 
 
     def check_price(self, currency: str) -> None:
         if currency == 'EUR':
-            assert self.get_text_element(self.PRICE_FIRST_PRODUCT) == '€19.12', \
-                f"Expect: '€19.12', Actual: '{self.get_text_element(self.PRICE_FIRST_PRODUCT)}'"
-            assert self.get_text_element(self.PRICE_SECOND_PRODUCT) == '€28.72', \
-                f"Expect: '€28.72', Actual: '{self.get_text_element(self.PRICE_SECOND_PRODUCT)}'"
-            assert self.get_text_element(self.PRICE_THIRD_PRODUCT) == '€29.00', \
-                f"Expect: '€29.00', Actual: '{self.get_text_element(self.PRICE_THIRD_PRODUCT)}'"
+            self.logger.info("Проверка цены в EUR")
+            with allure.step("Проверяем цену в EUR"):
+                assert self.get_text_element(self.PRICE_FIRST_PRODUCT) == '€19.12', \
+                    f"Expect: '€19.12', Actual: '{self.get_text_element(self.PRICE_FIRST_PRODUCT)}'"
+                assert self.get_text_element(self.PRICE_SECOND_PRODUCT) == '€28.72', \
+                    f"Expect: '€28.72', Actual: '{self.get_text_element(self.PRICE_SECOND_PRODUCT)}'"
+                assert self.get_text_element(self.PRICE_THIRD_PRODUCT) == '€29.00', \
+                    f"Expect: '€29.00', Actual: '{self.get_text_element(self.PRICE_THIRD_PRODUCT)}'"
         elif currency == 'USD':
-            assert self.get_text_element(self.PRICE_FIRST_PRODUCT) == '$21.80', \
-                f"Expect: '$21.86', Actual: '{self.get_text_element(self.PRICE_FIRST_PRODUCT)}'"
-            assert self.get_text_element(self.PRICE_SECOND_PRODUCT) == '$32.75', \
-                f"Expect: '$32.83', Actual: '{self.get_text_element(self.PRICE_SECOND_PRODUCT)}'"
-            assert self.get_text_element(self.PRICE_THIRD_PRODUCT) == '$33.07', \
-                f"Expect: '$33.15', Actual: '{self.get_text_element(self.PRICE_THIRD_PRODUCT)}'"
+            self.logger.info("Проверка цены в USD")
+            with allure.step("Проверяем цену в USD"):
+                assert self.get_text_element(self.PRICE_FIRST_PRODUCT) == '$21.80', \
+                    f"Expect: '$21.86', Actual: '{self.get_text_element(self.PRICE_FIRST_PRODUCT)}'"
+                assert self.get_text_element(self.PRICE_SECOND_PRODUCT) == '$32.75', \
+                    f"Expect: '$32.83', Actual: '{self.get_text_element(self.PRICE_SECOND_PRODUCT)}'"
+                assert self.get_text_element(self.PRICE_THIRD_PRODUCT) == '$33.07', \
+                    f"Expect: '$33.15', Actual: '{self.get_text_element(self.PRICE_THIRD_PRODUCT)}'"
 
     def change_currency(self):
-        self.click_on_element(self.CURRENCY)
-        self.click_on_element(self.CURRENCY_USD)
+        self.logger.info("Смена валюты")
+        with allure.step("Смена валюты"):
+            self.click_on_element(self.CURRENCY)
+            self.click_on_element(self.CURRENCY_USD)

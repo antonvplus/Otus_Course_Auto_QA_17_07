@@ -1,5 +1,7 @@
 from pages.base_page import BasePage
 from selenium.webdriver.common.by import By
+import allure
+import logging
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -20,14 +22,27 @@ class ProductPage(BasePage):
                              'facebook': FACEBOOK,
                              'product_details': PRODUCT_DETAILS}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.logger = logging.getLogger("Logger.ProductPage")
+
+    def open(self) -> None:
+        self.logger.info(f"Открыт браузер: {self.url}")
+        super().open()
 
     def check_clickable_element(self, element: str) -> None:
+        self.logger.info(f"Проверка, что элемент {element} кликабельный")
         assert self.is_element_clickable(self.dict_elements_on_page[element]), f"Non-clickable element '{element}' on the page."
 
     def check_visibility_element(self, element: str) -> None:
+        self.logger.info(f"Проверка, что элемент {element} отображается на странице")
         assert self.is_element_present(self.dict_elements_on_page[element]), f"The element '{element}' is not displayed on the page."
 
     def add_item_to_cart(self, cart_page: CartPage) -> CartPage:
-        self.click_on_element(self.ADD_TO_CART)
-        self.click_on_element(self.PROCEED_TO_CHECKOUT_BUTTON)
-        return cart_page
+        self.logger.info("Добавление товара в корзину")
+        with allure.step("Добавление товара в корзину"):
+            self.click_on_element(self.ADD_TO_CART)
+            self.click_on_element(self.PROCEED_TO_CHECKOUT_BUTTON)
+        with allure.step("Переходим в корзину"):
+            self.logger.info("Переход на страницу CartPage")
+            return cart_page
