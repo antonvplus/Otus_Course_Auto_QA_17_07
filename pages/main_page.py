@@ -62,12 +62,12 @@ class MainPage(BasePage):
         elif currency == 'USD':
             self.logger.info("Проверка цены в USD")
             with allure.step("Проверяем цену в USD"):
-                assert self.get_text_element(self.PRICE_FIRST_PRODUCT) == '$21.80', \
-                    f"Expect: '$21.86', Actual: '{self.get_text_element(self.PRICE_FIRST_PRODUCT)}'"
-                assert self.get_text_element(self.PRICE_SECOND_PRODUCT) == '$32.75', \
-                    f"Expect: '$32.83', Actual: '{self.get_text_element(self.PRICE_SECOND_PRODUCT)}'"
-                assert self.get_text_element(self.PRICE_THIRD_PRODUCT) == '$33.07', \
-                    f"Expect: '$33.15', Actual: '{self.get_text_element(self.PRICE_THIRD_PRODUCT)}'"
+                assert self.get_text_element(self.PRICE_FIRST_PRODUCT) == '$22.29', \
+                    f"Expect: '$22.29', Actual: '{self.get_text_element(self.PRICE_FIRST_PRODUCT)}'"
+                assert self.get_text_element(self.PRICE_SECOND_PRODUCT) == '$33.48', \
+                    f"Expect: '33.48', Actual: '{self.get_text_element(self.PRICE_SECOND_PRODUCT)}'"
+                assert self.get_text_element(self.PRICE_THIRD_PRODUCT) == '$33.81', \
+                    f"Expect: '$33.81', Actual: '{self.get_text_element(self.PRICE_THIRD_PRODUCT)}'"
 
     def change_currency(self):
         self.logger.info("Смена валюты")

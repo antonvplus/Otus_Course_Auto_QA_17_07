@@ -3,6 +3,7 @@ from selenium import webdriver
 from typing import Generator
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options as OptionsForFirefox
 import datetime
 from pathlib import Path
 import os
@@ -14,7 +15,9 @@ logger = logging.getLogger("Logger.Fixture")
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome", help="Selecting browser (chrome, firefox)")
-    parser.addoption("--base-url", action="store", default="http://localhost:8081/", help="Specify the base URL for opencart")
+    parser.addoption("--OS", action="store", default="windows", help="Selecting OS (windows, linux). If Linux is selected, "
+                                                                     "the browser will be launched in non-graphical interface mode.")
+    parser.addoption("--base-url", action="store", default="http://localhost:8081/", help="Specify the base URL for PrestaShop")
 
 @pytest.fixture(scope="function")
 def base_url(request: pytest.FixtureRequest) -> str:
@@ -27,13 +30,24 @@ def browser(request: pytest.FixtureRequest) -> Generator[WebDriver, None, None]:
         logger.info(f"Старт теста: {request.node.name}")
         with allure.step("Используем браузер Chrome"):
             options = Options()
-            options.add_argument("--start-maximized")
+            if request.config.getoption('OS') == 'windows':
+                options.add_argument("--start-maximized")
+            elif request.config.getoption('OS') == 'linux':
+                options.add_argument("--window-size=1920,1080")
+                options.add_argument("--headless=new")
+                options.add_argument("--no-sandbox")
+                options.add_argument("--disable-dev-shm-usage")
+                logger.debug("Запуска браузера без графического интерфейса")
             browser = webdriver.Chrome(options=options)
     elif request.config.getoption('browser') == 'firefox':
         logger.debug("Выбран браузер Firefox")
         logger.info(f"Старт теста: {request.node.name}")
+        options = OptionsForFirefox()
+        if request.config.getoption('OS') == 'linux':
+            options.add_argument("--headless")
+            logger.debug("Запуска браузера без графического интерфейса")
         with allure.step("Используем браузер Firefox"):
-            browser = webdriver.Firefox()
+            browser = webdriver.Firefox(options=options)
     else:
         raise ValueError(f"Unsupported browser: '{request.config.getoption('browser')}'")
     yield browser
