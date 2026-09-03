@@ -18,6 +18,7 @@ def pytest_addoption(parser):
     parser.addoption("--OS", action="store", default="windows", help="Selecting OS (windows, linux). If Linux is selected, "
                                                                      "the browser will be launched in non-graphical interface mode.")
     parser.addoption("--base-url", action="store", default="http://localhost:8081/", help="Specify the base URL for PrestaShop")
+    parser.addoption("--executor", action="store", default="local", help="local or selenoid")
 
 @pytest.fixture(scope="function")
 def base_url(request: pytest.FixtureRequest) -> str:
@@ -25,31 +26,42 @@ def base_url(request: pytest.FixtureRequest) -> str:
 
 @pytest.fixture(scope="function")
 def browser(request: pytest.FixtureRequest) -> Generator[WebDriver, None, None]:
-    if request.config.getoption('browser') == 'chrome':
-        logger.debug("Выбран браузер Chrome")
-        logger.info(f"Старт теста: {request.node.name}")
-        with allure.step("Используем браузер Chrome"):
-            options = Options()
-            if request.config.getoption('OS') == 'windows':
-                options.add_argument("--start-maximized")
-            elif request.config.getoption('OS') == 'linux':
-                options.add_argument("--window-size=1920,1080")
-                options.add_argument("--headless=new")
-                options.add_argument("--no-sandbox")
-                options.add_argument("--disable-dev-shm-usage")
-                logger.debug("Запуска браузера без графического интерфейса")
-            browser = webdriver.Chrome(options=options)
-    elif request.config.getoption('browser') == 'firefox':
-        logger.debug("Выбран браузер Firefox")
-        logger.info(f"Старт теста: {request.node.name}")
-        options = OptionsForFirefox()
-        if request.config.getoption('OS') == 'linux':
-            options.add_argument("--headless")
-            logger.debug("Запуска браузера без графического интерфейса")
-        with allure.step("Используем браузер Firefox"):
-            browser = webdriver.Firefox(options=options)
+    if request.config.getoption('executor') == 'selenoid':
+        logger.debug("Выбран браузер Chrome и selenoid")
+        selenoid_options = {
+            "enableVNC": True,
+            "enableVideo": False
+        }
+        options = Options()
+        options.set_capability("browserVersion", "120.0")
+        options.set_capability("selenoid:options", selenoid_options)
+        browser = webdriver.Remote(command_executor="http://selenoid:4444/wd/hub", options=options)
     else:
-        raise ValueError(f"Unsupported browser: '{request.config.getoption('browser')}'")
+        if request.config.getoption('browser') == 'chrome':
+            logger.debug("Выбран браузер Chrome")
+            logger.info(f"Старт теста: {request.node.name}")
+            with allure.step("Используем браузер Chrome"):
+                options = Options()
+                if request.config.getoption('OS') == 'windows':
+                    options.add_argument("--start-maximized")
+                elif request.config.getoption('OS') == 'linux':
+                    options.add_argument("--window-size=1920,1080")
+                    options.add_argument("--headless=new")
+                    options.add_argument("--no-sandbox")
+                    options.add_argument("--disable-dev-shm-usage")
+                    logger.debug("Запуска браузера без графического интерфейса")
+            browser = webdriver.Chrome(options=options)
+        elif request.config.getoption('browser') == 'firefox':
+            logger.debug("Выбран браузер Firefox")
+            logger.info(f"Старт теста: {request.node.name}")
+            options = OptionsForFirefox()
+            if request.config.getoption('OS') == 'linux':
+                options.add_argument("--headless")
+                logger.debug("Запуска браузера без графического интерфейса")
+            with allure.step("Используем браузер Firefox"):
+                browser = webdriver.Firefox(options=options)
+        else:
+            raise ValueError(f"Unsupported browser: '{request.config.getoption('browser')}'")
     yield browser
     with allure.step("Закрываем браузер"):
         browser.quit()
