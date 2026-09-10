@@ -11,7 +11,9 @@ import allure
 from logger_config import logger
 import logging
 
+
 logger = logging.getLogger("Logger.Fixture")
+
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="chrome", help="Selecting browser (chrome, firefox)")
@@ -26,23 +28,29 @@ def base_url(request: pytest.FixtureRequest) -> str:
 
 @pytest.fixture(scope="function")
 def browser(request: pytest.FixtureRequest) -> Generator[WebDriver, None, None]:
-    if request.config.getoption('executor') == 'selenoid':
-        logger.debug("Выбран браузер Chrome и selenoid")
+    if request.config.getoption('--executor') == 'selenoid' or request.config.getoption('--executor') == 'ggr':
+        logger.debug("Выбран браузер Chrome")
         selenoid_options = {
             "enableVNC": True,
             "enableVideo": False
         }
         options = Options()
+        options.set_capability("browserName", "chrome")
         options.set_capability("browserVersion", "120.0")
         options.set_capability("selenoid:options", selenoid_options)
-        browser = webdriver.Remote(command_executor="http://selenoid:4444/wd/hub", options=options)
+        if request.config.getoption('--executor') == "ggr":
+            logger.debug("Запуск через ggr , selenoid")
+            browser = webdriver.Remote(command_executor="http://ggr:4444/wd/hub", options=options)
+        else:
+            logger.debug("Запуск через selenoid")
+            browser = webdriver.Remote(command_executor="http://selenoid:4444/wd/hub", options=options)
     else:
-        if request.config.getoption('browser') == 'chrome':
+        if request.config.getoption('--browser') == 'chrome':
             logger.debug("Выбран браузер Chrome")
             logger.info(f"Старт теста: {request.node.name}")
             with allure.step("Используем браузер Chrome"):
                 options = Options()
-                if request.config.getoption('OS') == 'windows':
+                if request.config.getoption('--OS') == 'windows':
                     options.add_argument("--start-maximized")
                 elif request.config.getoption('OS') == 'linux':
                     options.add_argument("--window-size=1920,1080")
@@ -51,11 +59,11 @@ def browser(request: pytest.FixtureRequest) -> Generator[WebDriver, None, None]:
                     options.add_argument("--disable-dev-shm-usage")
                     logger.debug("Запуска браузера без графического интерфейса")
             browser = webdriver.Chrome(options=options)
-        elif request.config.getoption('browser') == 'firefox':
+        elif request.config.getoption('--browser') == 'firefox':
             logger.debug("Выбран браузер Firefox")
             logger.info(f"Старт теста: {request.node.name}")
             options = OptionsForFirefox()
-            if request.config.getoption('OS') == 'linux':
+            if request.config.getoption('--OS') == 'linux':
                 options.add_argument("--headless")
                 logger.debug("Запуска браузера без графического интерфейса")
             with allure.step("Используем браузер Firefox"):

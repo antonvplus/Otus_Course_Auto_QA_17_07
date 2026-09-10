@@ -1,12 +1,39 @@
 version: '3.8'
 
 services:
+
+  ggr:
+    image: aerokube/ggr:latest-release
+    container_name: ggr
+    restart: unless-stopped
+    ports:
+      - "4444:4444"
+    networks:
+      - selenoid
+    volumes:
+      - ./ggr:/etc/grid-router:ro
+    command: ["-guests-allowed"]
+    depends_on:
+      - selenoid
+
+  ggr-ui:
+    image: aerokube/ggr-ui:latest-release
+    container_name: ggr-ui
+    restart: unless-stopped
+    ports:
+      - "8844:8844"
+    networks:
+      - selenoid
+    volumes:
+      - ./ggr:/etc/grid-router:ro
+    command: [ "-listen", ":8844" ]
+    depends_on:
+      - ggr
+
   selenoid:
     image: aerokube/selenoid:latest-release
     container_name: selenoid
     restart: unless-stopped
-    ports:
-      - "4444:4444"
     networks:
       - selenoid
     volumes:
@@ -85,7 +112,7 @@ services:
       PS_LANGUAGE: "en"
       PS_COUNTRY: "US"
       PS_DEV_MODE: "1"
-      PS_DOMAIN: "localhost:8081"
+      PS_DOMAIN: "prestashop"
       ADMIN_MAIL: "admin@example.com"
       ADMIN_PASSWD: "Admin123!"
       PS_FOLDER_ADMIN: "administration"
@@ -126,9 +153,9 @@ services:
     container_name: pytest_tests
     networks:
       - selenoid
-    command: [ "--base-url", "http://prestashop/", "--executor", "selenoid" ]
+    command: [ "--base-url", "http://prestashop/", "--executor", "ggr" ]
     depends_on:
-      selenoid:
+      ggr:
         condition: service_started
       prestashop_postinstall:
         condition: service_completed_successfully
@@ -143,4 +170,3 @@ networks:
   selenoid:
     external:
       name: selenoid
-

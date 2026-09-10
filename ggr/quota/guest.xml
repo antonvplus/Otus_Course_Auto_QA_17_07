@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<qa:browsers xmlns:qa="http://aerokube.com">
+    <browser name="chrome" defaultVersion="120.0">
+        <version number="120.0">
+            <region name="local">
+                <host name="selenoid" port="4444" count="10"/>
+            </region>
+        </version>
+    </browser>
+</qa:browsers>
